@@ -26,6 +26,13 @@ def register():
         usertype=request.form.get("usertype")
         secure_password=sha256_crypt.encrypt(str(password))
 
+        emailData=db.execute("SELECT email from users",{"email":email}).fetchone()
+        for e in emailData:
+            if e==email:
+                flash("This email is already registered,try to login with your passwod","danger")
+                return redirect(url_for('login'))
+
+
         if password==confirm:
             db.execute("INSERT INTO users(firstname,lastname,email,password,usertype) VALUES(:firstname,:lastname,:email,:password,:usertype)",
             {"firstname":firstname,"lastname":lastname,"email":email,"password":secure_password,"usertype":usertype})
