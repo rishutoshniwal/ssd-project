@@ -26,11 +26,12 @@ def register():
         usertype=request.form.get("usertype")
         secure_password=sha256_crypt.encrypt(str(password))
 
-        emailData=db.execute("SELECT email from users",{"email":email}).fetchone()
-        for e in emailData:
-            if e==email:
-                flash("This email is already registered,try to login with your passwod","danger")
-                return redirect(url_for('login'))
+        emailData=db.execute("SELECT email from users WHERE email=:email",{"email":email}).fetchone()
+        
+       
+        if emailData!=None:
+             flash("This email is already registered,try to login with your passwod","danger")
+             return redirect(url_for('login'))
 
 
         if password==confirm:
@@ -71,10 +72,14 @@ def login():
     return render_template("login.html")
 
 
+
+
  #waiting room
-@app.route("/waiting")
+@app.route("/waiting",methods=["GET","POST"])
 def waiting():
      return render_template("waiting.html")   
+
+
 
 if __name__=="__main__":
     app.secret_key="rishurishu"
