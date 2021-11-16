@@ -2,8 +2,16 @@
   {% if messages %}
     <ul class=flashes>
     {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">{{ message }}</div>
+      <div id="disappear" class="alert alert-{{ category }}">{{ message }}</div>
     {% endfor %}
     </ul>
   {% endif %}
+  
+<script>
+
+setTimeout(function() {
+    $('#disappear').fadeOut('fast');
+}, 5000);
+
+  </script>
 {% endwith %}

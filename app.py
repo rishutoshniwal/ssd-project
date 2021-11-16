@@ -55,15 +55,19 @@ def login():
          password=request.form.get("password")
          emailData=db.execute("SELECT email from users WHERE email=:email",{"email":email}).fetchone()
          passwordData=db.execute("SELECT password from users WHERE email=:email",{"email":email}).fetchone()
-
+         #firstnameData=db.execute("SELECT firstname from users WHERE email=:email",{"email":email}).fetchone()
+                     
          if emailData is None:
              flash("Email is not registered","danger")
              return render_template("login.html")
          else:
              for pswd in passwordData:
                  if sha256_crypt.verify(password,pswd):
-                     flash("You are now login","success")
-                     return redirect(url_for('waiting'))
+                     firstnameData=db.execute("SELECT firstname from users WHERE email=:email",{"email":email}).fetchone()   
+                     for firstname in firstnameData :
+                        
+                        flash("You are now login","success")
+                        return render_template("waiting.html",firstname=firstname)
                  else:
                      flash("Incorrect Password","danger")
                      return render_template("login.html")
@@ -77,6 +81,7 @@ def login():
  #waiting room
 @app.route("/waiting",methods=["GET","POST"])
 def waiting():
+     firstname=request.args.get('firstname', None)
      return render_template("waiting.html")   
 
 
